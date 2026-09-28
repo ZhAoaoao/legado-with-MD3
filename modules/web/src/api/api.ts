@@ -120,25 +120,25 @@ const saveBook = (book: BaseBook) =>
 const deleteBook = (book: BaseBook) =>
   ajax.post<LeagdoApiResponse<string>>('deleteBook', book)
 
-const isBookSource = /bookSource/i.test(location.href)
+const isBookSourcePage = () => /bookSource/i.test(location.href)
 
 // 源编辑API
 // Http
 const getSources = () =>
-  isBookSource ? ajax.get('getBookSources') : ajax.get('getRssSources')
+  isBookSourcePage() ? ajax.get('getBookSources') : ajax.get('getRssSources')
 
 const saveSource = (data: Source) =>
-  isBookSource
+  isBookSourcePage()
     ? ajax.post<LeagdoApiResponse<string>>('saveBookSource', data)
     : ajax.post<LeagdoApiResponse<string>>('saveRssSource', data)
 
 const saveSources = (data: Source[]) =>
-  isBookSource
+  isBookSourcePage()
     ? ajax.post<LeagdoApiResponse<Source[]>>('saveBookSources', data)
     : ajax.post<LeagdoApiResponse<Source[]>>('saveRssSources', data)
 
 const deleteSource = (data: Source[]) =>
-  isBookSource
+  isBookSourcePage()
     ? ajax.post<LeagdoApiResponse<string>>('deleteBookSources', data)
     : ajax.post<LeagdoApiResponse<string>>('deleteRssSources', data)
 
@@ -150,7 +150,7 @@ const debug = (
   /** @type {() => void} */ onFinish: () => void,
 ) => {
   const url = new URL(
-    `${isBookSource ? 'bookSource' : 'rssSource'}Debug`,
+    `${isBookSourcePage() ? 'bookSource' : 'rssSource'}Debug`,
     legado_webSocket_entry_point,
   )
 

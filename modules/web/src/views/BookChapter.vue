@@ -3,12 +3,12 @@
     class="chapter-wrapper"
     :style="bodyTheme"
     :class="{ night: isNight, day: !isNight }"
-    @click="showToolBar = !showToolBar"
+    @click="onWrapperClick"
   >
     <div class="tool-bar" :style="leftBarTheme">
       <div class="tools">
         <el-popover
-          placement="right"
+          :placement="popupPlacement"
           :width="popupWidth"
           trigger="click"
           :show-arrow="false"
@@ -24,7 +24,7 @@
           </template>
         </el-popover>
         <el-popover
-          placement="right"
+          :placement="popupPlacement"
           :width="popupWidth"
           trigger="click"
           :show-arrow="false"
@@ -202,20 +202,24 @@ const bodyColor = computed(() => settings.themes[theme.value].body)
 const chapterColor = computed(() => settings.themes[theme.value].content)
 const popupColor = computed(() => settings.themes[theme.value].popup)
 
+const windowWidth = ref(window.innerWidth)
 const readWidth = computed(() => {
   if (!miniInterface.value) {
     return store.config.readWidth - 130 + 'px'
   } else {
-    return window.innerWidth + 'px'
+    return '100%'
   }
 })
 const popupWidth = computed(() => {
   if (!miniInterface.value) {
-    return store.config.readWidth - 33
+    return Math.min(store.config.readWidth - 33, windowWidth.value - 80)
   } else {
-    return window.innerWidth - 33
+    return Math.max(280, windowWidth.value - 16)
   }
 })
+const popupPlacement = computed(() =>
+  miniInterface.value ? 'bottom-start' : 'right',
+)
 const bodyTheme = computed(() => {
   return {
     background: bodyColor.value,
@@ -228,6 +232,11 @@ const chapterTheme = computed(() => {
   }
 })
 const showToolBar = ref(false)
+const onWrapperClick = (event: MouseEvent) => {
+  const target = event.target as HTMLElement | null
+  if (target?.closest('.tool-bar, .read-bar, .el-popper, .popup')) return
+  showToolBar.value = !showToolBar.value
+}
 const leftBarTheme = computed(() => {
   return {
     background: popupColor.value,
@@ -252,6 +261,7 @@ const rightBarTheme = computed(() => {
  * 阅读宽度最小为640px 加上工具栏 68px 52px 取较大值 为 776px
  */
 const onResize = () => {
+  windowWidth.value = window.innerWidth
   store.setMiniInterface(window.innerWidth < 776)
   const width = store.config.readWidth /**包含padding */
   checkPageWidth(width)
@@ -734,7 +744,7 @@ onBeforeRouteLeave(async (to, from, next) => {
 
     .tool-bar {
       left: 0;
-      width: 100vw;
+      width: 100%;
       margin-left: 0 !important;
 
       .tools {
@@ -743,35 +753,58 @@ onBeforeRouteLeave(async (to, from, next) => {
 
         .tool-icon {
           border: none;
+          flex: 1;
+          width: auto;
+          min-height: 48px;
+          height: auto;
+          box-sizing: border-box;
+          padding: 8px 4px 6px;
         }
       }
     }
 
     .read-bar {
       right: 0;
-      width: 100vw;
+      width: 100%;
       margin-right: 0 !important;
 
       .tools {
         flex-direction: row;
         justify-content: space-between;
-        padding: 0 15px;
+        padding: 0;
 
         .tool-icon {
           border: none;
+          flex: 1;
           width: auto;
+          min-height: 48px;
+          height: auto;
+          box-sizing: border-box;
+          padding: 12px 16px;
+          font-size: 16px;
 
           .iconfont {
             display: inline-block;
+            margin-right: 6px;
           }
         }
       }
     }
 
     .chapter {
-      width: 100vw !important;
-      padding: 0 20px;
+      width: 100% !important;
+      padding: 0 16px;
       box-sizing: border-box;
+
+      .content {
+        .top-bar {
+          height: 72px;
+        }
+
+        .bottom-bar {
+          height: 72px;
+        }
+      }
     }
   }
 }

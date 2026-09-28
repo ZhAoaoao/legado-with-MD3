@@ -5,7 +5,10 @@
   >
     <div class="title">目录</div>
     <virtual-list
-      style="height: 300px; overflow: auto"
+      :style="{
+        height: miniInterface ? 'min(52vh, 420px)' : '300px',
+        overflow: 'auto',
+      }"
       :class="{ night: isNight, day: !isNight }"
       ref="virtualListRef"
       data-key="index"
@@ -13,7 +16,7 @@
       item-class="cata"
       :data-sources="virtualListdata"
       :data-component="CatalogItem"
-      :estimate-size="40"
+      :estimate-size="miniInterface ? 48 : 40"
       :extra-props="{ gotoChapter, currentChapterIndex }"
     />
   </div>
@@ -130,6 +133,19 @@ const gotoChapter = (chapter: BookChapter) => {
   .day {
     :deep(.cata) {
       border-bottom: 1px solid #f2f2f2;
+    }
+  }
+}
+
+@media screen and (max-width: 776px) {
+  .cata-wrapper {
+    margin: 0;
+    padding: 12px 12px 16px;
+
+    :deep(.data-wrapper) .cata {
+      height: 48px;
+      font-size: 16px;
+      line-height: 48px;
     }
   }
 }

@@ -1,21 +1,21 @@
 <template>
-  <el-input
-    v-if="isBookSource"
-    id="debug-key"
-    v-model="searchKey"
-    placeholder="搜索书名、作者"
-    :prefix-icon="Search"
-    style="padding-bottom: 4px"
-    @keydown.enter="startDebug"
-  />
-  <el-input
-    id="debug-text"
-    v-model="printDebug"
-    type="textarea"
-    readonly
-    :rows="29"
-    placeholder="这里用于输出调试信息"
-  />
+  <div class="debug-page">
+    <el-input
+      v-if="isBookSource"
+      id="debug-key"
+      v-model="searchKey"
+      placeholder="搜索书名、作者"
+      :prefix-icon="Search"
+      @keydown.enter="startDebug"
+    />
+    <el-input
+      id="debug-text"
+      v-model="printDebug"
+      type="textarea"
+      readonly
+      placeholder="这里用于输出调试信息"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -55,13 +55,33 @@ const startDebug = async () => {
   )
 }
 
-const isBookSource = computed(() => {
-  return /bookSource/i.test(window.location.href)
-})
+const route = useRoute()
+const isBookSource = computed(() => /bookSource/i.test(route.path))
 </script>
 
 <style lang="scss" scoped>
+.debug-page {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+.debug-page > :deep(.el-textarea) {
+  flex: 1;
+  min-height: 0;
+}
+
 :deep(#debug-text) {
-  height: calc(100vh - 45px - 36px - 5px);
+  height: 100%;
+  min-height: 160px;
+}
+
+@media screen and (max-width: 768px) {
+  #debug-key :deep(.el-input__wrapper) {
+    min-height: 44px;
+  }
 }
 </style>

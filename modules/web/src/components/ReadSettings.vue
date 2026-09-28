@@ -480,10 +480,12 @@ const setInfiniteLoading = (loading: boolean) => {
 
         .resize {
           display: inline-block;
-          width: 274px;
+          width: min(274px, 100%);
+          max-width: 100%;
           height: 34px;
           vertical-align: middle;
           border-radius: 2px;
+          box-sizing: border-box;
 
           span {
             width: 89px;
@@ -586,11 +588,64 @@ const setInfiniteLoading = (loading: boolean) => {
   }
 }
 
-@media screen and (max-width: 500px) {
-  .settings-wrapper i {
-    display: flex !important;
-    flex-wrap: wrap;
-    padding-bottom: 5px !important;
+@media screen and (max-width: 776px) {
+  .settings-wrapper {
+    margin: 0;
+    padding: 16px 12px 20px;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+
+  .settings-wrapper .setting-list ul li {
+    margin-bottom: 8px;
+  }
+
+  .settings-wrapper .setting-list ul li i {
+    display: block;
+    min-width: 0;
+    margin: 0 0 8px;
+  }
+
+  .settings-wrapper .setting-list ul .font-size .resize,
+  .settings-wrapper .setting-list ul .read-width .resize,
+  .settings-wrapper .setting-list ul .letter-spacing .resize,
+  .settings-wrapper .setting-list ul .line-spacing .resize,
+  .settings-wrapper .setting-list ul .paragraph-spacing .resize {
+    display: flex;
+    width: 100%;
+    height: auto;
+  }
+
+  .settings-wrapper .setting-list ul .font-size .resize span,
+  .settings-wrapper .setting-list ul .read-width .resize span,
+  .settings-wrapper .setting-list ul .letter-spacing .resize span,
+  .settings-wrapper .setting-list ul .line-spacing .resize span,
+  .settings-wrapper .setting-list ul .paragraph-spacing .resize span {
+    flex: 1;
+    width: auto;
+    min-height: 44px;
+    height: auto;
+    line-height: 44px;
+  }
+
+  .settings-wrapper .setting-list ul .font-list .font-item,
+  .settings-wrapper .setting-list ul .infinite-loading .infinite-loading-item {
+    min-height: 40px;
+    height: auto;
+    line-height: 40px;
+    margin-bottom: 8px;
+  }
+
+  .settings-wrapper .setting-list ul li .theme-item {
+    width: 40px;
+    height: 40px;
+  }
+
+  .settings-wrapper .setting-list ul .font-list .font-item-input {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-height: 44px;
   }
 }
 </style>

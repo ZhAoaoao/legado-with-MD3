@@ -60,4 +60,13 @@ import { Link } from '@element-plus/icons-vue'
 .el-text {
   padding-top: 20px;
 }
+
+@media screen and (max-width: 768px) {
+  .el-link {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    font-size: 16px;
+  }
+}
 </style>
