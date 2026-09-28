@@ -1,13 +1,13 @@
 <template>
-  <el-input
-    id="source-json"
-    v-model="sourceString"
-    type="textarea"
-    placeholder="这里输出序列化的JSON数据,可直接导入'阅读'APP"
-    :rows="30"
-    @change="update"
-    style="margin-bottom: 4px"
-  ></el-input>
+  <div class="json-page">
+    <el-input
+      id="source-json"
+      v-model="sourceString"
+      type="textarea"
+      placeholder="这里输出序列化的JSON数据,可直接导入'阅读'APP"
+      @change="update"
+    ></el-input>
+  </div>
 </template>
 <script setup lang="ts">
 import { useSourceStore } from '@/store'
@@ -35,10 +35,23 @@ watchEffect(async () => {
 })
 </script>
 <style lang="scss" scoped>
+.json-page {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.json-page > :deep(.el-textarea) {
+  flex: 1;
+  min-height: 0;
+}
+
 :deep(.el-input) {
   width: 100%;
 }
 :deep(#source-json) {
-  height: calc(100vh - 50px);
+  height: 100%;
+  min-height: 180px;
 }
 </style>

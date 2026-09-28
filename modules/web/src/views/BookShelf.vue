@@ -5,15 +5,18 @@
         <div class="navigation-title">阅读</div>
         <div class="navigation-sub-title">清风不识字，何故乱翻书</div>
       </div>
+      <app-nav variant="rail" />
       <div class="search-wrapper">
         <el-input
           placeholder="搜索书籍，在线书籍自动加入书架"
           v-model="searchWord"
           class="search-input"
           :prefix-icon="SearchIcon"
+          enterkeyhint="search"
           @keyup.enter="searchBook"
         >
         </el-input>
+        <el-button class="search-btn" @click="searchBook">搜索</el-button>
       </div>
       <div class="bottom-wrapper">
         <div class="recent-wrapper">
@@ -309,12 +312,15 @@ onMounted(() => {
   width: 100%;
   display: flex;
   flex-direction: row;
+  overflow: hidden;
 
   .navigation-wrapper {
-    width: 260px;
-    min-width: 260px;
-    padding: 48px 36px;
+    width: 280px;
+    min-width: 280px;
+    box-sizing: border-box;
+    padding: 28px 20px 96px;
     background-color: #f7f7f7;
+    overflow: auto;
 
     .navigation-title {
       font-size: 24px;
@@ -331,14 +337,20 @@ onMounted(() => {
     }
 
     .search-wrapper {
-      .search-input {
-        border-radius: 50%;
-        margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 20px;
 
+      .search-input {
         :deep(.el-input__wrapper) {
           border-radius: 50px;
           border-color: #e3e3e3;
         }
+      }
+
+      .search-btn {
+        width: 100%;
       }
     }
 
@@ -348,7 +360,7 @@ onMounted(() => {
     }
 
     .recent-wrapper {
-      margin-top: 36px;
+      margin-top: 28px;
 
       .recent-title {
         font-size: 14px;
@@ -357,22 +369,21 @@ onMounted(() => {
       }
 
       .reading-recent {
-        margin: 18px 0;
+        margin: 12px 0;
 
         .recent-book {
-          font-size: 10px;
-          /*           // font-weight: 400;
-          // margin: 12px 0;
-          // font-weight: 500;
-          // color: #6B7C87; */
+          font-size: 14px;
+          max-width: 100%;
+          height: auto;
+          white-space: normal;
+          line-height: 1.4;
           cursor: pointer;
-          /*           // padding: 6px 18px; */
         }
       }
     }
 
     .setting-wrapper {
-      margin-top: 36px;
+      margin-top: 20px;
 
       .setting-title {
         font-size: 14px;
@@ -385,18 +396,23 @@ onMounted(() => {
       }
 
       .setting-connect {
-        font-size: 8px;
-        margin-top: 16px;
-        /*         // color: #6B7C87; */
+        font-size: 13px;
+        margin-top: 12px;
+        max-width: 100%;
+        height: auto;
+        white-space: normal;
+        word-break: break-all;
+        line-height: 1.4;
         cursor: pointer;
       }
     }
 
     .bottom-icons {
       position: fixed;
+      left: 0;
       bottom: 0;
-      height: 120px;
-      width: 260px;
+      height: 88px;
+      width: 280px;
       align-items: center;
       display: flex;
       flex-direction: row;
@@ -404,8 +420,11 @@ onMounted(() => {
   }
 
   .shelf-wrapper {
-    padding: 48px 48px;
-    width: 100%;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    padding: 24px 28px;
+    width: auto;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -413,15 +432,26 @@ onMounted(() => {
   }
 }
 
-@media screen and (max-width: 750px) {
+@media screen and (max-width: 768px) {
   .index-wrapper {
-    overflow-x: hidden;
     flex-direction: column;
 
     .navigation-wrapper {
-      padding: 20px 24px;
-      box-sizing: border-box;
       width: 100%;
+      min-width: 0;
+      flex: none;
+      max-height: 48vh;
+      padding: 12px 16px 8px;
+
+      .navigation-title {
+        font-size: 22px;
+      }
+
+      .navigation-sub-title {
+        margin-top: 0;
+        margin-left: 12px;
+        font-size: 13px;
+      }
 
       .navigation-title-wrapper {
         white-space: nowrap;
@@ -430,18 +460,43 @@ onMounted(() => {
         align-items: flex-end;
       }
 
-      .bottom-wrapper {
+      .search-wrapper {
         flex-direction: row;
+        align-items: center;
+        margin-top: 12px;
 
-        > * {
-          flex-grow: 1;
-          margin-top: 18px;
+        .search-input {
+          flex: 1;
+          min-width: 0;
 
-          .reading-recent,
-          .setting-item {
-            margin-bottom: 0px;
+          :deep(.el-input__wrapper) {
+            min-height: 44px;
           }
         }
+
+        .search-btn {
+          width: auto;
+          min-width: 72px;
+          min-height: 44px;
+        }
+      }
+
+      .bottom-wrapper {
+        flex-direction: column;
+      }
+
+      .recent-wrapper,
+      .setting-wrapper {
+        margin-top: 12px;
+      }
+
+      .recent-book,
+      .setting-connect {
+        display: inline-flex;
+        align-items: center;
+        box-sizing: border-box;
+        min-height: 44px;
+        padding: 8px 12px;
       }
 
       .bottom-icons {
@@ -451,7 +506,7 @@ onMounted(() => {
 
     .shelf-wrapper {
       padding: 0;
-      flex-grow: 1;
+      flex: 1;
 
       :deep(.el-loading-spinner) {
         display: none;

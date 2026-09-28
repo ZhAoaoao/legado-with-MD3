@@ -14,6 +14,7 @@
   </div>
   <el-dialog
     v-model="hotkeysDialogVisible"
+    :width="isNarrow ? '92vw' : '520px'"
     :show-close="false"
     :before-close="stopRecordKeyDown"
   >
@@ -68,7 +69,10 @@
 import API from '@api'
 import { CircleCheckFilled, Edit } from '@element-plus/icons-vue'
 import hotkeys from 'hotkeys-js'
+import { useMediaQuery } from '@vueuse/core'
 import { getSourceName, isInvaildSource, normalizeSource } from '../utils/souce'
+
+const isNarrow = useMediaQuery('(max-width: 768px)')
 
 const store = useSourceStore()
 const pull = () => {
@@ -344,6 +348,36 @@ onMounted(() => {
     }
     span {
       margin: 0.5em;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .menu.flex-column-center {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: flex-start;
+    padding: 8px 12px 24px;
+  }
+
+  .menu > .el-button {
+    width: calc(50% - 8px);
+    min-height: 48px;
+    height: auto;
+    margin: 4px;
+    white-space: normal;
+    padding: 10px 8px;
+  }
+
+  .hotkeys-item {
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .title {
+      width: auto;
+      justify-content: flex-start;
     }
   }
 }

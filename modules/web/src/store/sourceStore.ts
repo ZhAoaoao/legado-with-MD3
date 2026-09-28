@@ -7,8 +7,9 @@ import {
 } from '@utils/souce'
 import type { BookSoure, RssSource, Source } from '@/source'
 
-const isBookSource = /bookSource/i.test(location.href)
-const emptySource = isBookSource ? emptyBookSource : emptyRssSource
+const bookSourcePage = () => /bookSource/i.test(location.href)
+const emptyForPage = () =>
+  JSON.parse(JSON.stringify(bookSourcePage() ? emptyBookSource : emptyRssSource))
 
 export const useSourceStore = defineStore('source', {
   state: () => {
@@ -16,7 +17,7 @@ export const useSourceStore = defineStore('source', {
       bookSources: shallowRef([] as BookSoure[]), // 临时存放所有书源,
       rssSources: shallowRef([] as RssSource[]), // 临时存放所有订阅源
       savedSources: [] as Source[], // 批量保存到阅读app成功的源
-      currentSource: JSON.parse(JSON.stringify(emptySource)) as Source, // 当前编辑的源
+      currentSource: emptyForPage() as Source, // 当前编辑的源
       currentTab: localStorage.getItem('tabName') || 'editTab',
       editTabSource: {} as Source, // 生成序列化的json数据
       isDebuging: false,
@@ -24,18 +25,18 @@ export const useSourceStore = defineStore('source', {
   },
   getters: {
     sources: (state): Source[] =>
-      isBookSource ? state.bookSources : state.rssSources,
+      bookSourcePage() ? state.bookSources : state.rssSources,
     sourcesMap: function (): Map<string, Source> {
       return convertSourcesToMap(this.sources)
     },
     savedSourcesMap: (state): Map<string, Source> =>
       convertSourcesToMap(state.savedSources),
     currentSourceUrl: state =>
-      isBookSource
+      bookSourcePage()
         ? (state.currentSource as BookSoure).bookSourceUrl
         : (state.currentSource as RssSource).sourceUrl,
     searchKey: (state): string =>
-      isBookSource
+      bookSourcePage()
         ? (state.currentSource as BookSoure)?.ruleSearch?.checkKeyWord || '我的'
         : '',
   },
@@ -50,7 +51,7 @@ export const useSourceStore = defineStore('source', {
 
     //拉取源后保存
     saveSources(data: Source[]) {
-      if (isBookSource) {
+      if (bookSourcePage()) {
         this.bookSources = markRaw(data) as BookSoure[]
       } else {
         this.rssSources = markRaw(data) as RssSource[]
@@ -62,7 +63,7 @@ export const useSourceStore = defineStore('source', {
     },
     //删除源
     deleteSources(data: Source[]) {
-      const sources: Source[] = isBookSource
+      const sources: Source[] = bookSourcePage()
         ? this.bookSources
         : this.rssSources
       data.forEach(source => {
@@ -121,7 +122,13 @@ export const useSourceStore = defineStore('source', {
     },
     clearEdit() {
       this.editTabSource = {} as Source
-      this.currentSource = JSON.parse(JSON.stringify(emptySource)) //复制一份新对象
+      this.currentSource = emptyForPage()
+    },
+    /** 书架和书源在同一页面里切换时，补齐对应的空源结构 */
+    ensureEditor(kind: 'book' | 'rss') {
+      const looksBook = 'ruleSearch' in this.currentSource
+      if (kind === 'book' && !looksBook) this.currentSource = JSON.parse(JSON.stringify(emptyBookSource))
+      if (kind === 'rss' && looksBook) this.currentSource = JSON.parse(JSON.stringify(emptyRssSource))
     },
 
     // clear all source

@@ -1,4 +1,5 @@
 <template>
+  <div class="source-list-page">
   <el-input
     v-model="searchKey"
     class="search"
@@ -31,6 +32,7 @@
   </div>
   <el-checkbox-group id="source-list" v-model="sourceUrlSelect">
     <virtual-list
+      class="source-virtual"
       style="height: 100%; overflow-y: auto; overflow-x: hidden"
       :data-key="(source: Source) => getSourceName(source)"
       :data-sources="sourcesFiltered"
@@ -38,6 +40,7 @@
       :estimate-size="45"
     />
   </el-checkbox-group>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -144,6 +147,14 @@ const outExport = () => {
 </script>
 
 <style lang="scss" scoped>
+.source-list-page {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
 .tool {
   display: flex;
   margin: 4px 0;
@@ -152,10 +163,43 @@ const outExport = () => {
 
 #source-list {
   margin-top: 6px;
-  height: calc(100vh - 112px - 7px);
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   :deep(.el-checkbox) {
     margin-bottom: 4px;
     width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+.source-virtual {
+  height: 100%;
+}
+
+@media screen and (max-width: 768px) {
+  .search :deep(.el-input__wrapper) {
+    min-height: 44px;
+  }
+
+  .tool {
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: stretch;
+
+    :deep(.el-button) {
+      flex: 1 1 calc(50% - 8px);
+      margin: 0;
+      min-height: 44px;
+    }
+  }
+
+  #source-list :deep(.el-checkbox) {
+    min-height: 44px;
+    height: auto;
+    padding-top: 6px;
+    padding-bottom: 6px;
   }
 }
 </style>

@@ -78,56 +78,73 @@ const subJustify = computed(() =>
 
 <style lang="scss" scoped>
 .books-wrapper {
+  flex: 1;
+  min-height: 0;
   overflow: auto;
 
   .wrapper {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 380px);
-    justify-content: space-around;
-    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+    align-content: start;
 
     .book {
       user-select: none;
       display: flex;
       cursor: pointer;
-      margin-bottom: 18px;
-      padding: 24px 24px;
-      width: 360px;
+      margin-bottom: 0;
+      padding: 16px;
+      width: auto;
+      min-width: 0;
+      box-sizing: border-box;
       flex-direction: row;
-      justify-content: space-around;
+      align-items: flex-start;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      background: #fff;
 
       .cover-img {
-        width: 84px;
-        height: 112px;
+        width: 72px;
+        height: 96px;
+        flex: none;
 
         .cover {
-          width: 84px;
-          height: 112px;
+          width: 72px;
+          height: 96px;
+          object-fit: cover;
+          border-radius: 4px;
         }
       }
 
       .info {
         display: flex;
         flex-direction: column;
-        justify-content: space-around;
-        align-items: left;
-        height: 112px;
-        margin-left: 20px;
+        justify-content: space-between;
+        align-items: flex-start;
+        min-height: 96px;
+        margin-left: 14px;
         flex: 1;
+        min-width: 0;
         overflow: hidden;
 
         .name {
-          width: fit-content;
-          font-size: 16px;
+          max-width: 100%;
+          font-size: 15px;
           font-weight: 700;
           color: #33373d;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .sub {
           display: flex;
           flex-direction: row;
+          flex-wrap: wrap;
           align-items: baseline;
           justify-content: v-bind('subJustify');
+          gap: 4px 8px;
+          max-width: 100%;
           font-size: 12px;
           font-weight: 600;
           color: #6b6b6b;
@@ -138,6 +155,7 @@ const subJustify = computed(() =>
           }
           .update-info {
             display: flex;
+            flex-wrap: wrap;
             .dot {
               margin: 0 7px;
             }
@@ -159,18 +177,21 @@ const subJustify = computed(() =>
           -webkit-line-clamp: 1;
           line-clamp: 1;
           text-align: left;
+          max-width: 100%;
         }
       }
     }
 
-    .book:hover {
-      background: rgba(0, 0, 0, 0.1);
-      transition-duration: 0.5s;
+    .book:active {
+      background: rgba(0, 0, 0, 0.06);
     }
   }
+}
 
-  .wrapper:last-child {
-    margin-right: auto;
+@media (hover: hover) {
+  .books-wrapper .wrapper .book:hover {
+    background: rgba(0, 0, 0, 0.06);
+    transition-duration: 0.2s;
   }
 }
 
@@ -178,17 +199,50 @@ const subJustify = computed(() =>
   width: 0 !important;
 }
 
-@media screen and (max-width: 750px) {
+:global(.night) .book {
+  background: #222426;
+  border-color: #3a3a3a;
+}
+
+:global(.night) .name {
+  color: #eee;
+}
+
+:global(.night) .sub {
+  color: #c5c5c5;
+}
+
+@media screen and (max-width: 768px) {
   .books-wrapper {
     .wrapper {
       display: flex;
       flex-direction: column;
+      gap: 0;
 
       .book {
         box-sizing: border-box;
         width: 100%;
         margin-bottom: 0;
-        padding: 10px 20px;
+        padding: 14px 16px;
+        min-height: 96px;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+
+        .cover-img,
+        .cover-img .cover {
+          width: 64px;
+          height: 86px;
+        }
+
+        .info {
+          min-height: 86px;
+
+          .name {
+            font-size: 16px;
+          }
+        }
       }
     }
   }

@@ -1,5 +1,5 @@
 <template>
-  <el-tabs v-model="current_tab">
+  <el-tabs v-model="current_tab" class="source-tools">
     <el-tab-pane
       v-for="(tab, index) in tabData"
       :key="tab[0]"
@@ -33,7 +33,37 @@ const tabData = ref([
 </script>
 
 <style lang="scss" scoped>
+.source-tools {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
 :deep(.el-tabs__header) {
   margin-bottom: 5px;
+  flex: none;
+}
+:deep(.el-tabs__content) {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+:deep(.el-tab-pane) {
+  height: 100%;
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 768px) {
+  .source-tools {
+    padding: 0 12px 12px;
+    box-sizing: border-box;
+  }
+
+  :deep(.el-tabs__item) {
+    height: 44px;
+    line-height: 44px;
+    padding: 0 12px;
+  }
 }
 </style>

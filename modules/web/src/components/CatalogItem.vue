@@ -39,13 +39,24 @@ const catas = computed(() => {
 }
 .wrapper {
   display: flex;
+  min-width: 0;
 
   .cata-text {
     width: 100%;
+    min-width: 0;
     margin-right: 26px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    box-sizing: border-box;
+  }
+}
+
+@media screen and (max-width: 776px) {
+  .wrapper .cata-text {
+    margin-right: 0;
+    padding: 0 8px 0 0;
+    line-height: 48px;
   }
 }
 </style>
